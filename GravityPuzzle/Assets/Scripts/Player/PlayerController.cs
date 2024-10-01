@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
 
     // Referenzen
     private Rigidbody2D rb;
-    private bool isGrounded;
+    public bool isGrounded;
     private bool facingRight = true;
 
     // Schwerkraft-Richtungen
@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour
         Physics2D.gravity = gravityDirection * 9.81f;
     }
 
-    void FixedUpdate()
+    void Update()
     {
         // Bewegung links und rechts basierend auf der aktuellen Schwerkraft
         float moveInput = Input.GetAxis("Horizontal");
