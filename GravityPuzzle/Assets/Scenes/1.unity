@@ -6297,8 +6297,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 925586961}
-  - component: {fileID: 925586960}
   - component: {fileID: 925586963}
+  - component: {fileID: 925586964}
   - component: {fileID: 925586962}
   m_Layer: 0
   m_Name: Player
@@ -6307,26 +6307,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &925586960
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 925586959}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72e7b52602671574ca7b1add700c176f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 5
-  jumpForce: 7
-  groundCheck: {fileID: 1118248881}
-  groundCheckRadius: 0.2
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  isGrounded: 0
 --- !u!4 &925586961
 Transform:
   m_ObjectHideFlags: 0
@@ -6383,7 +6363,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13354e252a29e3b4a8fd94b6c104be36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isGrounded: 1
   _playerDirection: 0
+  groundCheck: {fileID: 1118248881}
+  groundCheckRadius: 0.3
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+--- !u!114 &925586964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 925586959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72e7b52602671574ca7b1add700c176f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 5
 --- !u!1 &987084001
 GameObject:
   m_ObjectHideFlags: 0

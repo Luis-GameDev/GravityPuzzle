@@ -3,26 +3,37 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class GravityController : MonoBehaviour
-{
-    private Rigidbody2D rb;
-    private bool top;
-    private bool isGrounded = true;
-    public enum Direction
+public enum Direction
     {
         Up,
         Down,
         Left,
         Right
     }
-    public Direction _playerDirection;
-    public PlayerInputActions playerControls;
+    
+public class GravityController : MonoBehaviour
+{
+    private Rigidbody2D rb;
+    private bool top;
+    [HideInInspector] public bool isGrounded = true;
+    
+    [HideInInspector] public Direction _playerDirection;
+    private PlayerInputActions playerControls;
     private InputAction SwitchUp;
     private InputAction SwitchDown;
     private InputAction SwitchLeft;
     private InputAction SwitchRight;
 
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private float groundCheckRadius = 0.2f;
+    [SerializeField] private LayerMask groundLayer;
 
+    
+    void FixedUpdate()
+    {
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+        print(isGrounded);
+    }
 
     void Awake()
     {
@@ -64,30 +75,42 @@ public class GravityController : MonoBehaviour
 
     private void SwitchGravityUp(InputAction.CallbackContext context)
     {
-        _playerDirection = Direction.Up;
-        Physics2D.gravity = new Vector2(0f, 9.81f);  
-        Rotation(180);
+        if(isGrounded)
+        {
+            _playerDirection = Direction.Up;
+            Physics2D.gravity = new Vector2(0f, 9.81f);  
+            Rotation(180);
+        }
     }
 
     private void SwitchGravityDown(InputAction.CallbackContext context)
     {
-        _playerDirection = Direction.Down;
-        Physics2D.gravity = new Vector2(0f, -9.81f);
-        Rotation(0);
+        if(isGrounded)
+        {
+            _playerDirection = Direction.Down;
+            Physics2D.gravity = new Vector2(0f, -9.81f);
+            Rotation(0);
+        }
     }
 
     private void SwitchGravityLeft(InputAction.CallbackContext context)
     {
-        _playerDirection = Direction.Left;
-        Physics2D.gravity = new Vector2(-9.81f, 0f);
-        Rotation(-90);
+        if(isGrounded)
+        {
+            _playerDirection = Direction.Left;
+            Physics2D.gravity = new Vector2(-9.81f, 0f);
+            Rotation(-90);
+        }
     }
 
     private void SwitchGravityRight(InputAction.CallbackContext context)
     {
-        _playerDirection = Direction.Right;
-        Physics2D.gravity = new Vector2(9.81f, 0f);
-        Rotation(90);
+        if(isGrounded)
+        {
+            _playerDirection = Direction.Right;
+            Physics2D.gravity = new Vector2(9.81f, 0f);
+            Rotation(90);
+        }  
     }
 
     void Rotation(float rotation)

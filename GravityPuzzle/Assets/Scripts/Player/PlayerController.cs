@@ -1,98 +1,77 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    // Bewegungsgeschwindigkeit und Sprungkraft
-    public float moveSpeed = 5f;
-    public float jumpForce = 7f;
-
-    // Bodenüberprüfung
-    public Transform groundCheck;
-    public float groundCheckRadius = 0.2f;
-    public LayerMask groundLayer;
-
-    // Referenzen
+    private PlayerInputActions playerInputActions;
     private Rigidbody2D rb;
-    public bool isGrounded;
-    private bool facingRight = true;
+    [SerializeField] private float moveSpeed = 5f;
+    private Vector2 moveDirection = Vector2.zero;
+    private GravityController gravityController;
 
-    // Schwerkraft-Richtungen
-    private Vector2 gravityDirection = Vector2.down;
-    private Vector3 rotationAngle = Vector3.zero;
-
-    void Start()
+    private void Awake()
     {
-        // Referenz zum Rigidbody2D
+        playerInputActions = new PlayerInputActions();
         rb = GetComponent<Rigidbody2D>();
+
+        gravityController = GetComponent<GravityController>();
+    }
+
+    private void OnEnable()
+    {
+        playerInputActions.Enable();
+
+        playerInputActions.Movement.MoveLeft.performed += OnMoveLeft;
+        playerInputActions.Movement.MoveLeft.canceled += OnStopMove;
         
-        // Setze die standardmäßige Schwerkraft
-        Physics2D.gravity = gravityDirection * 9.81f;
+        playerInputActions.Movement.MoveRight.performed += OnMoveRight;
+        playerInputActions.Movement.MoveRight.canceled += OnStopMove;
     }
 
-    void Update()
+    private void OnDisable()
     {
-        // Bewegung links und rechts basierend auf der aktuellen Schwerkraft
-        float moveInput = Input.GetAxis("Horizontal");
-        
-        // Bewege den Charakter in die Richtung der aktuellen Schwerkraft (seitlich)
-        Vector2 moveVelocity = GetMovementDirection() * moveInput * moveSpeed;
-        rb.velocity = new Vector2(moveVelocity.x, rb.velocity.y);  // Bewegung ohne vertikalen Einfluss
-
-        // Überprüfung, ob der Charakter auf dem Boden ist
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
-
-        // Sprung nur, wenn auf dem Boden
-        if (isGrounded && Input.GetButtonDown("Jump"))
-        {
-            rb.velocity = new Vector2(rb.velocity.x, 0);  // Setze vertikale Geschwindigkeit zurück, bevor der Sprung erfolgt
-            rb.AddForce(-gravityDirection * jumpForce, ForceMode2D.Impulse);  // Springe entgegen der aktuellen Schwerkraft
-        }
-
-        // Überprüfe und ändere die Gravitation mit den Pfeiltasten
-        HandleGravityChange();
+        playerInputActions.Disable();
     }
 
-    // Bewegung basierend auf der aktuellen Schwerkraft (links/rechts)
-    Vector2 GetMovementDirection()
+    private void OnMoveLeft(InputAction.CallbackContext context)
     {
-        if (gravityDirection == Vector2.down || gravityDirection == Vector2.up)
+        moveDirection = GetRelativeDirection(-1f);
+    }
+
+    private void OnMoveRight(InputAction.CallbackContext context)
+    {
+        moveDirection = GetRelativeDirection(1f);
+    }
+
+    private void OnStopMove(InputAction.CallbackContext context)
+    {
+        moveDirection = Vector2.zero;
+    }
+
+    private void FixedUpdate()
+    {
+        if(gravityController.isGrounded)
         {
-            return new Vector2(1, 0); // Bewegung entlang der X-Achse (links/rechts)
-        }
-        else
-        {
-            return new Vector2(0, 1); // Bewegung entlang der Y-Achse (oben/unten)
+            rb.velocity = moveDirection * moveSpeed;
         }
     }
 
-    // Handhabung der Schwerkraftänderung mit den Pfeiltasten
-    void HandleGravityChange()
+    private Vector2 GetRelativeDirection(float horizontalInput)
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            gravityDirection = Vector2.up;
-            rotationAngle = new Vector3(0, 0, 180); // Drehe um 180 Grad
-        }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            gravityDirection = Vector2.down;
-            rotationAngle = Vector3.zero; // Normale Ausrichtung
-        }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            gravityDirection = Vector2.left;
-            rotationAngle = new Vector3(0, 0, 90); // Drehe um 90 Grad im Uhrzeigersinn
-        }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            gravityDirection = Vector2.right;
-            rotationAngle = new Vector3(0, 0, -90); // Drehe um 90 Grad gegen den Uhrzeigersinn
-        }
+        Direction playerDirection = gravityController._playerDirection;
 
-        // Setze die neue Schwerkraft
-        Physics2D.gravity = gravityDirection * 9.81f;
-
-        // Drehe den Charakter entsprechend der neuen Schwerkraftrichtung
-        transform.eulerAngles = rotationAngle;
+        switch (playerDirection)
+        {
+            case Direction.Up:
+                return new Vector2(-horizontalInput, 0f); // Left becomes right relative to Up
+            case Direction.Down:
+                return new Vector2(horizontalInput, 0f);  // Normal left/right for Down gravity
+            case Direction.Right:
+                return new Vector2(0f, horizontalInput);  // Left/right becomes up/down relative to Right gravity
+            case Direction.Left:
+                return new Vector2(0f, -horizontalInput); // Left/right becomes down/up relative to Left gravity
+            default:
+                return Vector2.zero;
+        }
     }
 }

@@ -56,5 +56,6 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "GravityPuzzle.sln"
+    "dotnet.defaultSolution": "GravityPuzzle.sln",
+    "dotnet.preferCSharpExtension": true
 }
