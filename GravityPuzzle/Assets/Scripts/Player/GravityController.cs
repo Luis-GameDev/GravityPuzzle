@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public enum Direction
     {
@@ -14,9 +15,9 @@ public enum Direction
 public class GravityController : MonoBehaviour
 {
     private Rigidbody2D rb;
-    private bool top;
     [HideInInspector] public bool isGrounded = true;
-    
+    [HideInInspector] public delegate void OnDeathTriggered();
+    [HideInInspector] public static event OnDeathTriggered OnDeath;
     [HideInInspector] public Direction _playerDirection;
     private PlayerInputActions playerControls;
     private InputAction SwitchUp;
@@ -27,16 +28,15 @@ public class GravityController : MonoBehaviour
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundCheckRadius = 0.2f;
     [SerializeField] private LayerMask groundLayer;
-
     
     void FixedUpdate()
     {
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
-        print(isGrounded);
     }
 
     void Awake()
     {
+        //groundLayer = LayerMask.NameToLayer("Ground");
         playerControls = new PlayerInputActions();
     }
 
@@ -71,6 +71,23 @@ public class GravityController : MonoBehaviour
         SwitchDown.Disable();
         SwitchLeft.Disable();
         SwitchRight.Disable();
+    }
+
+    void TriggerDeath()
+    {
+        //OnDeath();
+        _playerDirection = Direction.Down;
+        Physics2D.gravity = new Vector2(0f, -9.81f);
+        Rotation(0);
+        Destroy(gameObject);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Deadly"))
+        {
+            TriggerDeath();
+        }
     }
 
     private void SwitchGravityUp(InputAction.CallbackContext context)
