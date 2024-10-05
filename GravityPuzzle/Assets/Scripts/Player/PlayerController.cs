@@ -32,14 +32,12 @@ public class PlayerController : MonoBehaviour
     {
         playerInputActions.Enable();
 
-        // Register move left/right actions
         playerInputActions.Movement.MoveLeft.performed += OnMoveLeft;
         playerInputActions.Movement.MoveLeft.canceled += OnStopMoveLeft;
 
         playerInputActions.Movement.MoveRight.performed += OnMoveRight;
         playerInputActions.Movement.MoveRight.canceled += OnStopMoveRight;
 
-        // Register jump action
         playerInputActions.Movement.Jump.performed += OnJump;
     }
 
@@ -51,7 +49,7 @@ public class PlayerController : MonoBehaviour
     private void OnMoveLeft(InputAction.CallbackContext context)
     {
         moveDirection = GetRelativeDirection(-1f);
-        facingRight = false; // Facing left
+        facingRight = false; 
         AnimateWalking();
         isWalkingLeft = true;
     }
@@ -59,7 +57,7 @@ public class PlayerController : MonoBehaviour
     private void OnMoveRight(InputAction.CallbackContext context)
     {
         moveDirection = GetRelativeDirection(1f);
-        facingRight = true; // Facing right
+        facingRight = true; 
         AnimateWalking();
         isWalkingRight = true;
     }
@@ -76,7 +74,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             moveDirection = GetRelativeDirection(1f);
-            facingRight = true; // Facing right
+            facingRight = true; 
             AnimateWalking();
             isWalkingRight = true;
         }
@@ -94,16 +92,14 @@ public class PlayerController : MonoBehaviour
         else
         {
             moveDirection = GetRelativeDirection(-1f);
-            facingRight = false; // Facing left
+            facingRight = false; 
             AnimateWalking();
             isWalkingLeft = true;
         }
     }
 
-    // Handle the Jump action
     private void OnJump(InputAction.CallbackContext context)
     {
-        // Only jump if grounded
         if (gravityController.isGrounded)
         {
             Vector2 jumpDirection = GetJumpDirection();
@@ -111,7 +107,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Calculate the jump direction based on the current gravity
     private Vector2 GetJumpDirection()
     {
         Direction playerDirection = gravityController._playerDirection;
@@ -135,28 +130,23 @@ public class PlayerController : MonoBehaviour
     {
         if (gravityController.isGrounded)
         {
-            // Apply velocity based on the current gravity state
             Direction playerDirection = gravityController._playerDirection;
             if (playerDirection == Direction.Down || playerDirection == Direction.Up)
             {
-                // Horizontal movement in Up/Down gravity
                 rb.velocity = new Vector2(moveDirection.x * moveSpeed, rb.velocity.y);
             }
             else
             {
-                // Vertical movement in Left/Right gravity
                 rb.velocity = new Vector2(rb.velocity.x, moveDirection.y * moveSpeed);
             }
         }
 
-        // Update the walking animation when moving
         if (moveDirection != Vector2.zero)
         {
             AnimateWalking();
         }
     }
 
-    // Determine relative movement based on gravity direction
     private Vector2 GetRelativeDirection(float horizontalInput)
     {
         Direction playerDirection = gravityController._playerDirection;
@@ -176,7 +166,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Animate walking by cycling between standing and walking sprites
     private void AnimateWalking()
     {
         animationTimer += Time.deltaTime;
@@ -185,7 +174,6 @@ public class PlayerController : MonoBehaviour
         {
             if (facingRight)
             {
-                // Toggle between walkingRight and standingRight
                 if (spriteRenderer.sprite == walkingRight)
                 {
                     spriteRenderer.sprite = standingRight;
@@ -197,7 +185,6 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                // Toggle between walkingLeft and standingLeft
                 if (spriteRenderer.sprite == walkingLeft)
                 {
                     spriteRenderer.sprite = standingLeft;
@@ -208,12 +195,10 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            // Reset the animation timer
             animationTimer = 0f;
         }
     }
 
-    // Set the standing sprite based on the last direction faced
     private void SetStandingSprite()
     {
         if (facingRight)
