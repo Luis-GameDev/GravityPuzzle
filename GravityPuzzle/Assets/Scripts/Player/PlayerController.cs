@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
     private PlayerInputActions playerInputActions;
     private Rigidbody2D rb;
     [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float jumpForce = 5f; // Jump force
     private Vector2 moveDirection = Vector2.zero;
     private GravityController gravityController;
     public Sprite standingRight;
@@ -31,11 +32,15 @@ public class PlayerController : MonoBehaviour
     {
         playerInputActions.Enable();
 
+        // Register move left/right actions
         playerInputActions.Movement.MoveLeft.performed += OnMoveLeft;
         playerInputActions.Movement.MoveLeft.canceled += OnStopMoveLeft;
 
         playerInputActions.Movement.MoveRight.performed += OnMoveRight;
         playerInputActions.Movement.MoveRight.canceled += OnStopMoveRight;
+
+        // Register jump action
+        playerInputActions.Movement.Jump.performed += OnJump;
     }
 
     private void OnDisable()
@@ -95,11 +100,53 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Handle the Jump action
+    private void OnJump(InputAction.CallbackContext context)
+    {
+        // Only jump if grounded
+        if (gravityController.isGrounded)
+        {
+            Vector2 jumpDirection = GetJumpDirection();
+            rb.AddForce(jumpDirection * jumpForce, ForceMode2D.Impulse);
+        }
+    }
+
+    // Calculate the jump direction based on the current gravity
+    private Vector2 GetJumpDirection()
+    {
+        Direction playerDirection = gravityController._playerDirection;
+
+        switch (playerDirection)
+        {
+            case Direction.Up:
+                return Vector2.down;  // Jump down when gravity is upwards
+            case Direction.Down:
+                return Vector2.up;    // Jump up when gravity is downwards (normal gravity)
+            case Direction.Right:
+                return Vector2.left;  // Jump left when gravity is to the right
+            case Direction.Left:
+                return Vector2.right; // Jump right when gravity is to the left
+            default:
+                return Vector2.up;    // Default to upwards if no gravity direction is found
+        }
+    }
+
     private void FixedUpdate()
     {
         if (gravityController.isGrounded)
         {
-            rb.velocity = moveDirection * moveSpeed;
+            // Apply velocity based on the current gravity state
+            Direction playerDirection = gravityController._playerDirection;
+            if (playerDirection == Direction.Down || playerDirection == Direction.Up)
+            {
+                // Horizontal movement in Up/Down gravity
+                rb.velocity = new Vector2(moveDirection.x * moveSpeed, rb.velocity.y);
+            }
+            else
+            {
+                // Vertical movement in Left/Right gravity
+                rb.velocity = new Vector2(rb.velocity.x, moveDirection.y * moveSpeed);
+            }
         }
 
         // Update the walking animation when moving

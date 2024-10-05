@@ -5,12 +5,10 @@ using UnityEngine;
 public class LevelCompletionTrigger : MonoBehaviour
 {
     [SerializeField] private GameObject winScreen;
-    void OnTriggerEnter(Collider other)
+    void OnTriggerEnter2D(Collider2D other)
     {
-        print("Detected a collision!");
         if(other.gameObject.tag == "Player")
         {
-            print("Detected a collision with the Player!");
             winScreen.SetActive(true);
         }
     }

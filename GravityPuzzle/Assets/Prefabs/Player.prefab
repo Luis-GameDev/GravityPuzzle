@@ -69,6 +69,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+  jumpForce: 10
   standingRight: {fileID: 1583333656, guid: 213115323584f7144805d855ca6cbb1a, type: 3}
   walkingRight: {fileID: 510512556, guid: 213115323584f7144805d855ca6cbb1a, type: 3}
   standingLeft: {fileID: -23787197, guid: 213115323584f7144805d855ca6cbb1a, type: 3}
