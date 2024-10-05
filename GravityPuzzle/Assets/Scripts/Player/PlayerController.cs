@@ -8,14 +8,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float moveSpeed = 5f;
     private Vector2 moveDirection = Vector2.zero;
     private GravityController gravityController;
-
-    // Animation-related fields
     public Sprite standingRight;
     public Sprite walkingRight;
     public Sprite standingLeft;
     public Sprite walkingLeft;
     private SpriteRenderer spriteRenderer;
-
+    private bool isWalkingLeft = false;
+    private bool isWalkingRight = false;
     private bool facingRight = true; 
     private float animationTimer = 0f;
     public float animationSpeed = 0.1f; 
@@ -33,10 +32,10 @@ public class PlayerController : MonoBehaviour
         playerInputActions.Enable();
 
         playerInputActions.Movement.MoveLeft.performed += OnMoveLeft;
-        playerInputActions.Movement.MoveLeft.canceled += OnStopMove;
+        playerInputActions.Movement.MoveLeft.canceled += OnStopMoveLeft;
 
         playerInputActions.Movement.MoveRight.performed += OnMoveRight;
-        playerInputActions.Movement.MoveRight.canceled += OnStopMove;
+        playerInputActions.Movement.MoveRight.canceled += OnStopMoveRight;
     }
 
     private void OnDisable()
@@ -49,6 +48,7 @@ public class PlayerController : MonoBehaviour
         moveDirection = GetRelativeDirection(-1f);
         facingRight = false; // Facing left
         AnimateWalking();
+        isWalkingLeft = true;
     }
 
     private void OnMoveRight(InputAction.CallbackContext context)
@@ -56,12 +56,43 @@ public class PlayerController : MonoBehaviour
         moveDirection = GetRelativeDirection(1f);
         facingRight = true; // Facing right
         AnimateWalking();
+        isWalkingRight = true;
     }
 
-    private void OnStopMove(InputAction.CallbackContext context)
+    private void OnStopMoveLeft(InputAction.CallbackContext context)
     {
-        moveDirection = Vector2.zero;
-        SetStandingSprite();
+        isWalkingLeft = false;
+
+        if(!isWalkingRight)
+        {
+            moveDirection = Vector2.zero;
+            SetStandingSprite();   
+        }
+        else
+        {
+            moveDirection = GetRelativeDirection(1f);
+            facingRight = true; // Facing right
+            AnimateWalking();
+            isWalkingRight = true;
+        }
+    }
+
+    private void OnStopMoveRight(InputAction.CallbackContext context)
+    {
+        isWalkingRight = false;
+
+        if(!isWalkingLeft)
+        {
+            moveDirection = Vector2.zero;
+            SetStandingSprite();
+        }
+        else
+        {
+            moveDirection = GetRelativeDirection(-1f);
+            facingRight = false; // Facing left
+            AnimateWalking();
+            isWalkingLeft = true;
+        }
     }
 
     private void FixedUpdate()
