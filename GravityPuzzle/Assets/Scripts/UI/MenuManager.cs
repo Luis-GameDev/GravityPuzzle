@@ -13,14 +13,11 @@ public class MenuManager : MonoBehaviour
     private int amountOfStars = 0;
     private string amountOfStarsString;
     public List<GameObject> levelPrefabsList = new List<GameObject>();
+
     void Awake()
     {
-        
-        if(PlayerPrefs.HasKey("PlayerProgress"))
-        {
-            highestCompletedLevel = PlayerPrefs.GetInt("Level");
-            amountOfStars = PlayerPrefs.GetInt("Stars");
-        }
+        highestCompletedLevel = PlayerPrefs.GetInt("Level");
+        amountOfStars = PlayerPrefs.GetInt("Stars");
 
         amountOfStarsString = amountOfStars.ToString();
         starsAmountText.text = amountOfStarsString;

@@ -17,8 +17,8 @@ public class GravityController : MonoBehaviour
     private Rigidbody2D rb;
     [HideInInspector] public bool isGrounded = true;
     [HideInInspector] public delegate void OnDeathTriggered();
-    [HideInInspector] public static event OnDeathTriggered OnDeath;
-    [HideInInspector] public Direction _playerDirection;
+    //[HideInInspector] public static event OnDeathTriggered OnDeath;
+    [HideInInspector] public Direction _playerDirection = Direction.Down;
     private PlayerInputActions playerControls;
     private InputAction SwitchUp;
     private InputAction SwitchDown;
@@ -130,7 +130,7 @@ public class GravityController : MonoBehaviour
         }  
     }
 
-    void Rotation(float rotation)
+    public void Rotation(float rotation)
     {
         transform.rotation = Quaternion.Euler(0,0,rotation);
     }

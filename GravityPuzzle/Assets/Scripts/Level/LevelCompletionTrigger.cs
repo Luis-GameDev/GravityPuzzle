@@ -10,29 +10,26 @@ public class LevelCompletionTrigger : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other)
     {
         if(other.gameObject.tag == "Player")
-        {
+        {   
+            other.gameObject.GetComponent<GravityController>()._playerDirection = Direction.Down;
+            Physics2D.gravity = new Vector2(0f, -9.81f);
+            other.gameObject.GetComponent<GravityController>().Rotation(0);
+
             winScreen.SetActive(true);
 
             Scene currentScene = SceneManager.GetActiveScene();
             string sceneName = currentScene.name;
             int sceneIndex = int.Parse(sceneName);
 
-            if(PlayerPrefs.HasKey("PlayerProgress"))
-            {
-                highestCompletedLevel = PlayerPrefs.GetInt("Level");
-            }
+            highestCompletedLevel = PlayerPrefs.GetInt("Level");
 
             if(sceneIndex > highestCompletedLevel) 
             {
-                if(PlayerPrefs.HasKey("PlayerProgress"))
-                {
-                    PlayerPrefs.SetInt("Level", sceneIndex);
-                    int stars = PlayerPrefs.GetInt("Stars");
-                    float starsF = Mathf.Ceil(sceneIndex/2);
-                    stars += (int)starsF;
-                    PlayerPrefs.SetInt("Stars", stars);
-                    PlayerPrefs.Save();
-                }
+                PlayerPrefs.SetInt("Level", sceneIndex);
+                int stars = PlayerPrefs.GetInt("Stars");
+                stars += 2;
+                PlayerPrefs.SetInt("Stars", stars);
+                PlayerPrefs.Save();
             }   
         }
     }
