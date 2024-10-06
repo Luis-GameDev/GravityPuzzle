@@ -9,7 +9,8 @@ public class InitiateLevel : MonoBehaviour
 {
     [SerializeField] public int levelIndex;
     private Text levelText;
-    public bool _levelCompletionState = false;
+    public bool levelCompleted = false;
+    private bool locked = true;
 
     public void Start()
     {
@@ -26,9 +27,25 @@ public class InitiateLevel : MonoBehaviour
     }
     public void StartLevel()
     {
-        if(levelIndex != 0)
+        Transform lockedObj = transform.Find("Locked");
+
+        if(lockedObj != null)
         {
-            SceneManager.LoadScene(levelIndex, LoadSceneMode.Additive);
+            Image lockedImage = lockedObj.GetComponent<Image>();
+
+            if(lockedImage.enabled)
+            {
+                locked = true;
+            }
+            else
+            {
+                locked = false;
+            }
+        }
+
+        if(levelIndex != 0 && !locked)
+        {
+            SceneManager.LoadScene(levelIndex);
         }
         else
         {
