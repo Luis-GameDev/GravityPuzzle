@@ -24,10 +24,10 @@ EditorBuildSettings:
     path: Assets/Scenes/50.unity
     guid: 2c1df8a3400afc24c95ebe8eb4aef605
   - enabled: 1
-    path: Assets/Scenes/6.unity
+    path: Assets/Scenes/60.unity
     guid: 6af18226da9da4541a1799dfe6987704
   - enabled: 1
-    path: Assets/Scenes/7.unity
+    path: Assets/Scenes/6.unity
     guid: a084ee7838889a945a2855138c224bd3
   - enabled: 1
     path: Assets/Scenes/5.unity
