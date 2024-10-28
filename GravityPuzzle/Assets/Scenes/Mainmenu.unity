@@ -230,7 +230,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelPrefab: {fileID: 1791570124203368210, guid: 7cf0a01078a8529468d4569ea0a4e267, type: 3}
   contentObject: {fileID: 1853219143}
-  maxAmountOfLevel: 4
+  maxAmountOfLevel: 6
   starsAmountText: {fileID: 604172631}
   levelPrefabsList: []
 --- !u!4 &93196884

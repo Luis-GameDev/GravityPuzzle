@@ -17,6 +17,8 @@ public class LevelCompletionTrigger : MonoBehaviour
 
             winScreen.SetActive(true);
 
+            GameObject.Find("LevelSceneManager").GetComponent<LevelSceneManager>().isGameActive = false;
+
             Scene currentScene = SceneManager.GetActiveScene();
             string sceneName = currentScene.name;
             int sceneIndex = int.Parse(sceneName);
