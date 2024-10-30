@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,7 +7,8 @@ public class PlayerController : MonoBehaviour
     private PlayerInputActions playerInputActions;
     private Rigidbody2D rb;
     [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private float jumpForce = 5f; // Jump force
+    [SerializeField] private float jumpForce = 5f; 
+    [SerializeField] private float jumpTime = 0.4f;
     private Vector2 moveDirection = Vector2.zero;
     private GravityController gravityController;
     public Sprite standingRight;
@@ -17,6 +19,7 @@ public class PlayerController : MonoBehaviour
     private bool isWalkingLeft = false;
     private bool isWalkingRight = false;
     private bool facingRight = true; 
+    private bool isJumping = false;
     private float animationTimer = 0f;
     public float animationSpeed = 0.1f; 
 
@@ -104,7 +107,16 @@ public class PlayerController : MonoBehaviour
         {
             Vector2 jumpDirection = GetJumpDirection();
             rb.AddForce(jumpDirection * jumpForce, ForceMode2D.Impulse);
+            isJumping = true;
+            StartCoroutine(LeaveJump(jumpTime));
         }
+    }
+
+    private IEnumerator LeaveJump(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        isJumping = false;
     }
 
     private Vector2 GetJumpDirection()
@@ -128,7 +140,8 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (gravityController.isGrounded)
+        print(isJumping);
+        if (gravityController.isGrounded || isJumping)
         {
             Direction playerDirection = gravityController._playerDirection;
             if (playerDirection == Direction.Down || playerDirection == Direction.Up)

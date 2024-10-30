@@ -97,6 +97,7 @@ public class GravityController : MonoBehaviour
             _playerDirection = Direction.Up;
             Physics2D.gravity = new Vector2(0f, 9.81f);  
             Rotation(180);
+            ResetPlayerPhysics();
         }
     }
 
@@ -107,6 +108,7 @@ public class GravityController : MonoBehaviour
             _playerDirection = Direction.Down;
             Physics2D.gravity = new Vector2(0f, -9.81f);
             Rotation(0);
+            ResetPlayerPhysics();
         }
     }
 
@@ -117,6 +119,7 @@ public class GravityController : MonoBehaviour
             _playerDirection = Direction.Left;
             Physics2D.gravity = new Vector2(-9.81f, 0f);
             Rotation(-90);
+            ResetPlayerPhysics();
         }
     }
 
@@ -127,11 +130,24 @@ public class GravityController : MonoBehaviour
             _playerDirection = Direction.Right;
             Physics2D.gravity = new Vector2(9.81f, 0f);
             Rotation(90);
+            ResetPlayerPhysics();
         }  
     }
 
     public void Rotation(float rotation)
     {
         transform.rotation = Quaternion.Euler(0,0,rotation);
+    }
+
+    private void ResetPlayerPhysics()
+    {
+        Rigidbody2D player = gameObject.GetComponent<Rigidbody2D>();
+
+        if(player != null)
+        {
+            player.velocity = Vector2.zero;            
+            player.angularVelocity = 0f; 
+            player.Sleep(); 
+        }
     }
 }
