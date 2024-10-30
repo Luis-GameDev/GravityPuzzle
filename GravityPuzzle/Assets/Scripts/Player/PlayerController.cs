@@ -140,7 +140,6 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        print(isJumping);
         if (gravityController.isGrounded || isJumping)
         {
             Direction playerDirection = gravityController._playerDirection;
