@@ -7,7 +7,7 @@ public class MenuManager : MonoBehaviour
 {
     [SerializeField] private GameObject levelPrefab;
     [SerializeField] private Transform contentObject;
-    [SerializeField] private int maxAmountOfLevel = 4;
+    [SerializeField] private int maxAmountOfLevel = 5;
     [SerializeField] private Text starsAmountText;
     private int highestCompletedLevel = 0;
     private int amountOfStars = 0;
