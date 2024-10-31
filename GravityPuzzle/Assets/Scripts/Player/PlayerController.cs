@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    private PlayerInputActions playerInputActions;
+    [HideInInspector] public PlayerInputActions playerInputActions;
     private Rigidbody2D rb;
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float jumpForce = 5f; 

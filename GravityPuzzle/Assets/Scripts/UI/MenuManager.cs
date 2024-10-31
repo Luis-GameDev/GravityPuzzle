@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
@@ -15,47 +16,54 @@ public class MenuManager : MonoBehaviour
     public List<GameObject> levelPrefabsList = new List<GameObject>();
 
     void Awake()
-    {
-        highestCompletedLevel = PlayerPrefs.GetInt("Level");
-        amountOfStars = PlayerPrefs.GetInt("Stars");
-
-        amountOfStarsString = amountOfStars.ToString();
-        starsAmountText.text = amountOfStarsString;
-
-        for(int i = 1; i <= maxAmountOfLevel; i++)
+    {   
+        if(PlayerPrefs.GetInt("Tutorial") != 1)
         {
-            GameObject newLevel = Instantiate(levelPrefab, contentObject);
-            newLevel.GetComponent<InitiateLevel>().levelIndex = i;
-            if(i <= highestCompletedLevel)
+            SceneManager.LoadScene("Tutorial");
+        }
+        else
+        {
+            highestCompletedLevel = PlayerPrefs.GetInt("Level");
+            amountOfStars = PlayerPrefs.GetInt("Stars");
+
+            amountOfStarsString = amountOfStars.ToString();
+            starsAmountText.text = amountOfStarsString;
+
+            for(int i = 1; i <= maxAmountOfLevel; i++)
             {
-                Transform checkmark = newLevel.transform.Find("Completed");
-                newLevel.GetComponent<InitiateLevel>().levelCompleted = true;
-
-                if(checkmark != null)
+                GameObject newLevel = Instantiate(levelPrefab, contentObject);
+                newLevel.GetComponent<InitiateLevel>().levelIndex = i;
+                if(i <= highestCompletedLevel)
                 {
-                    Image checkmarkImage = checkmark.GetComponent<Image>();
+                    Transform checkmark = newLevel.transform.Find("Completed");
+                    newLevel.GetComponent<InitiateLevel>().levelCompleted = true;
 
-                    if(checkmarkImage != null)
+                    if(checkmark != null)
                     {
-                        checkmarkImage.enabled = true;
+                        Image checkmarkImage = checkmark.GetComponent<Image>();
+
+                        if(checkmarkImage != null)
+                        {
+                            checkmarkImage.enabled = true;
+                        }
                     }
                 }
-            }
-            else if(i > highestCompletedLevel+1 && i != 1)
-            {
-                Transform locked = newLevel.transform.Find("Locked");
-
-                if(locked != null)
+                else if(i > highestCompletedLevel+1 && i != 1)
                 {
-                    Image lockedImage = locked.GetComponent<Image>();
+                    Transform locked = newLevel.transform.Find("Locked");
 
-                    if(lockedImage != null)
+                    if(locked != null)
                     {
-                        lockedImage.enabled = true;
+                        Image lockedImage = locked.GetComponent<Image>();
+
+                        if(lockedImage != null)
+                        {
+                            lockedImage.enabled = true;
+                        }
                     }
                 }
+                levelPrefabsList.Add(newLevel);
             }
-            levelPrefabsList.Add(newLevel);
         }
     }
 }

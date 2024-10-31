@@ -11,6 +11,7 @@ public class WinScreenManager : MonoBehaviour
     {
         Scene currentScene = SceneManager.GetActiveScene();
         string sceneName = currentScene.name;
+        if(sceneName == "Tutorial") return;
         level = int.Parse(sceneName);
 
         GetComponent<Text>().text = "Level " + level;

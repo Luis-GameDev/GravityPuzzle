@@ -21,6 +21,7 @@ public class LevelCompletionTrigger : MonoBehaviour
 
             Scene currentScene = SceneManager.GetActiveScene();
             string sceneName = currentScene.name;
+            if(sceneName == "Tutorial") return;
             int sceneIndex = int.Parse(sceneName);
 
             highestCompletedLevel = PlayerPrefs.GetInt("Level");
