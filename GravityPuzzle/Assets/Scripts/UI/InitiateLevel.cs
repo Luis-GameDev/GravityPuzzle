@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -8,13 +9,14 @@ using UnityEngine.UI;
 public class InitiateLevel : MonoBehaviour
 {
     [SerializeField] public int levelIndex;
-    private Text levelText;
+    [SerializeField] private TextMeshProUGUI text;
+    private TextMeshProUGUI levelText;
     public bool levelCompleted = false;
     private bool locked = true;
 
     public void Start()
     {
-        transform.Find("Text").gameObject.TryGetComponent<Text>(out levelText);
+        levelText = text.GetComponent<TextMeshProUGUI>();
 
         if(levelText != null)
         {
