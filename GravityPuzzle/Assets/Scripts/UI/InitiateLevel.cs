@@ -49,7 +49,7 @@ public class InitiateLevel : MonoBehaviour
         }
         else
         {
-            Debug.Log("Error: No Level defined!");
+            Debug.Log("Error: Level not unlocked!");
         }
     }
 }
